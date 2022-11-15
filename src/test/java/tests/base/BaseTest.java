@@ -2,6 +2,8 @@ package tests.base;
 
 import common.CommonActions;
 import common.Config;
+import common.Listener;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,7 @@ import java.io.File;
 import java.time.LocalTime;
 import java.util.Objects;
 
+@ExtendWith(Listener.class)
 public class BaseTest {
 
     protected CommonActions commonActions = CommonActions.getInstance();
