@@ -1,5 +1,6 @@
 package tests.qa_test;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,11 +25,18 @@ public class QaFormTest extends BaseTest {
     @DisplayName("Проверка email поля - невалидные форматы")
     @ParameterizedTest
     @ValueSource(strings = {
+            "~!#$%^&*()_+-=.,/?|",
             "123тест",
+            "AbcАбс",
+            ":;{}[]><~`'",
             "@",
             "login@",
             "@mail.ru",
             "qwerty",
+            "login @ mail.ru",
+            "login@login",
+            "русcкий@mail.ru",
+            " ",
             ""
     })
     void errorLoginFormatTest(String email) {
@@ -37,34 +45,42 @@ public class QaFormTest extends BaseTest {
         qaTestPage.checkEmailFormatError();
     }
 
-    @DisplayName("Проверка имени - пустое имя")
-    @Test
-    void invalidNameTest() {
+    @DisplayName("Проверка имени - невалидные данные")
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "",
+            " ",
+            ")(*(&*^%$/|?<>",
+            "123"
+    })
+    void invalidNameTest(String name) {
         qaTestPage.setDataEmail(EMAIL);
+        qaTestPage.setDataName(name);
         qaTestPage.dataSend();
         qaTestPage.checkBlankNameError();
     }
 
-    @DisplayName("Проверка имени и email")
+    @DisplayName("Проверка имени - валидные данные")
     @ParameterizedTest
-    @CsvSource({
-            "admin@admin,name",
-            "test@protei.ru,тест 1234567890",
-            "емейл@mail.ru,Имяяяя Фамилия Отчество"
+    @ValueSource(strings = {
+            "name",
+            "тест",
+            "Имяяяя Фамилия Отчество",
+            "First.Name Last Na-me OK"
     })
-    void checkNameTest(String email, String pass) {
-        qaTestPage.setDataEmail(email);
+    void checkNameTest(String pass) {
+        qaTestPage.setDataEmail(EMAIL);
         qaTestPage.setDataName(pass);
         qaTestPage.dataSend();
         qaTestPage.submitData();
-        qaTestPage.checkDataEmail(email);
+        qaTestPage.checkDataEmail(EMAIL);
         qaTestPage.checkDataName(pass);
     }
 
     @DisplayName("Проверка гендера")
     @ParameterizedTest
     @ValueSource(strings = {"Мужской", "Женский"})
-    void invalidNameTest(String gender) {
+    void checkGender(String gender) {
         qaTestPage.setDataEmail(EMAIL);
         qaTestPage.setDataName("test");
         qaTestPage.setGender(gender);
@@ -121,10 +137,10 @@ public class QaFormTest extends BaseTest {
         qaTestPage.checkChoice2(choice2);
     }
 
-    @DisplayName("ПРоверка двух записей")
+    @DisplayName("Проверка двух записей")
     @ParameterizedTest
     @CsvSource("email@email,test,admin@admin,mikhail")
-    void checkTableRow(String email0, String name0, String email1, String name1) {
+    void checkTableUsers(String email0, String name0, String email1, String name1) {
         qaTestPage.setDataEmail(email0);
         qaTestPage.setDataName(name0);
         qaTestPage.dataSend();

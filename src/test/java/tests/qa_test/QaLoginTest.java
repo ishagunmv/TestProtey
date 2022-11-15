@@ -17,13 +17,18 @@ public class QaLoginTest extends BaseTest {
     @DisplayName("Проверка login поля - невалидные форматы")
     @ParameterizedTest
     @ValueSource(strings = {
-            "~!#$%^&*()_+-=.,",
+            "~!#$%^&*()_+-=.,/?|",
             "123тест",
+            "AbcАбс",
             ":;{}[]><~`'",
             "@",
             "login@",
             "@mail.ru",
             "qwerty",
+            "login @ mail.ru",
+            "login@login",
+            "русcкий@mail.ru",
+            " ",
             ""
     })
     void errorLoginFormatTest(String login) {
@@ -35,11 +40,11 @@ public class QaLoginTest extends BaseTest {
     @DisplayName("Проверка неверный email/password")
     @ParameterizedTest
     @CsvSource({
-            "12345@login.ruuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu,test",
+            "12345@login.ru,test",
             "test@protei.ru,",
+            "test@protei.ru, ",
             "test@protei.ru,ABC_abc123",
             "test@protei.ru,!@#$%^&*()_+=",
-            "абсфв!#$%^&*()@mail.,"
     })
     void invalidEmailPasswordTest(String login, String password) {
         qaTestPage.setLogin(login);
