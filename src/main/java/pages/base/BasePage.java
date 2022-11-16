@@ -50,7 +50,7 @@ public class BasePage {
     }
 
     protected void clearAndType(WebElement element, String value) {
-        element.sendKeys(Keys.LEFT_CONTROL + "a", Keys.DELETE);
+        element.sendKeys(Keys.CONTROL + "a", Keys.BACK_SPACE);
         if (value != null) {
             element.sendKeys(value);
         }
